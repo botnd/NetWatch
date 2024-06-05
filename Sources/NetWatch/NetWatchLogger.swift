@@ -16,7 +16,16 @@ struct NetWatchLogger {
     public var get: () throws -> [NetWatchLogRecord]
 }
 
+extension NetWatchLogger {
+    static var logsDir: URL {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return urls[0]
+    }
 
+    static var defaultLogsFilename: String {
+        "new_watch_logs.plist"
+    }
+}
 
 struct NetWatchLogRecord: Codable {
     let initialURL: String
