@@ -10,6 +10,11 @@ final class URLSessionTests: XCTestCase {
         .init(url: URL(string: "http://localhost/")!)
     }
 
+    override func tearDown() {
+        successExpectation = nil
+        failureExpectation = nil
+    }
+
     private var successExpectation: XCTestExpectation?
     private var failureExpectation: XCTestExpectation?
 
