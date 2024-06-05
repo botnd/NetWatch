@@ -17,7 +17,12 @@ struct NetWatchLogger {
                 try? PropertyListEncoder().encode(logs).write(to: Self.logsFileUrl)
             },
             get: {
-                []
+                do {
+                    return try PropertyListDecoder().decode([NetWatchLogRecord].self,
+                                                     from: Data(contentsOf: Self.logsFileUrl))
+                } catch {
+                    return []
+                }
             }
         )
     }
