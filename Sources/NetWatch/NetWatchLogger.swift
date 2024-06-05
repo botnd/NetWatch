@@ -1,7 +1,26 @@
 import Foundation
 
 struct NetWatchLogger {
+    static var shared: Self {
+        return .init(
+            log: { record in
+                var logs: [NetWatchLogRecord]
+                do {
+                    let data = try Data(contentsOf: Self.logsFileUrl)
+                    logs = try PropertyListDecoder().decode([NetWatchLogRecord].self, from: data)
+                } catch {
+                    logs = []
+                }
 
+                logs.append(record)
+
+                try? PropertyListEncoder().encode(logs).write(to: Self.logsFileUrl)
+            },
+            get: {
+                []
+            }
+        )
+    }
 
     init(
         log: @escaping (NetWatchLogRecord) throws -> Void,
