@@ -25,6 +25,16 @@ extension NetWatchLogger {
     static var defaultLogsFilename: String {
         "new_watch_logs.plist"
     }
+
+    static var logsFileUrl: URL {
+        let fileURL: URL
+        if #available(iOS 16.0, *) {
+            fileURL = logsDir.appending(path: Self.defaultLogsFilename)
+        } else {
+            fileURL = logsDir.appendingPathComponent(Self.defaultLogsFilename)
+        }
+        return fileURL
+    }
 }
 
 struct NetWatchLogRecord: Codable {
