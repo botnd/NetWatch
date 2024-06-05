@@ -58,6 +58,42 @@ final class NetWatchLoggerTests: XCTestCase {
 
         XCTAssertEqual(records.last, record)
     }
+
+    func testGet() throws {
+        try? FileManager.default.removeItem(at: NetWatchLogger.logsFileUrl)
+
+        let count = (50...100).randomElement()!
+        for i in 0..<count {
+            try logger.log(.init(
+                initialURL: UUID().uuidString,
+                duration: i * 100,
+                finalURL: UUID().uuidString,
+                status: UUID().uuidString
+            ))
+        }
+
+        let records = try logger.get()
+
+        XCTAssertEqual(records.count, count)
+    }
+
+    func testGetEmpty() throws {
+        let recordsEmpty = [NetWatchLogRecord]()
+
+        try PropertyListEncoder().encode(recordsEmpty).write(to: NetWatchLogger.logsFileUrl)
+
+        let records = try logger.get()
+
+        XCTAssert(records.isEmpty)
+    }
+
+    func testGetNoFile() throws {
+        try? FileManager.default.removeItem(at: NetWatchLogger.logsFileUrl)
+
+        let records = try logger.get()
+
+        XCTAssert(records.isEmpty)
+    }
 }
 
 extension NetWatchLogRecord: Equatable {
