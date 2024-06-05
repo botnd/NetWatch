@@ -1,2 +1,9 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+import Foundation
+
+@objcMembers
+final public class NetWatch: NSObject {
+    @objc(configure)
+    public static func configure() {
+        URLSession.swizzleDataTask(logger: .shared)
+    }
+}
